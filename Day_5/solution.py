@@ -60,7 +60,7 @@ for item in correctly_ordered:
 
 print(f"Part 1 answer: {total}")
 
-
+############### PART 2
 corrected = []
 for item in incorrectly_ordered:
     corrected.append(orderCorrectly(item, instructions))
