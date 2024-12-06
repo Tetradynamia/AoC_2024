@@ -86,7 +86,10 @@ def find_path(
     return set(positions)
 
 
-print(len(find_path(find_current_position(map), direction, map_obstacles(map))))
+unique_positions = len(
+    find_path(find_current_position(map), direction, map_obstacles(map))
+)
+print(f"Part 1 answer: {unique_positions}")
 
 ######################################## PART 2
 
@@ -98,7 +101,9 @@ initial_obstacles = map_obstacles(map)
 loop_counter = 0
 
 
-def move(state, obstacles):
+def move(
+    state: Tuple[int, int, str], obstacles: set[Tuple[int, int]]
+) -> Tuple[int, int, str]:
     new_position = take_step((state[0], state[1]), state[2])
     if (new_position[0], new_position[1]) not in obstacles:
         return (new_position[0], new_position[1], state[2])
@@ -107,38 +112,30 @@ def move(state, obstacles):
         return (state[0], state[1], new_direction)
 
 
-def add_obstacle(pos, obstacles):
+def add_obstacle(
+    pos: Tuple[int, int], obstacles: Tuple[int, int, str]
+) -> Tuple[int, int, str]:
     new_obs = obstacles.copy()
     new_obs.add(pos)
     return new_obs
 
 
-def detect_loop(state, obstacles):
+def detect_loop(state: Tuple[int, int, str], obstacles: Tuple[int, int, str]) -> bool:
     seen = set()
     seen.add(initial_state)
 
-    while True:
+    while not exit((state[0], state[1]), state[2]):
         state = move(state, obstacles)
         if state in seen:
             return True
         seen.add(state)
 
-        if state[2] == "^" and state[0] == 0:
-            break
-        elif state[2] == ">" and state[1] == len(map[state[0]]) - 1:
-            break
-        elif state[2] == "<" and state[1] == 0:
-            break
-        elif state[2] == "v" and state[0] == len(map) - 1:
-            break
-
     return False
 
 
-for i in range(len(map)):
-    for j in range(len(map[i])):
-        if (i, j) not in initial_obstacles and (i, j) != initial_position:
-            obstacles = add_obstacle((i, j), initial_obstacles)
-            if detect_loop(initial_state, obstacles):
-                loop_counter += 1
-print(loop_counter)
+for position in guard_positions:
+    if position != initial_position:
+        obstacles = add_obstacle(position, initial_obstacles)
+        if detect_loop(initial_state, obstacles):
+            loop_counter += 1
+print(f"Part 2 answer: {loop_counter}")
