@@ -134,8 +134,7 @@ def detect_loop(state: Tuple[int, int, str], obstacles: Tuple[int, int, str]) ->
 
 
 for position in guard_positions:
-    if position != initial_position:
-        obstacles = add_obstacle(position, initial_obstacles)
-        if detect_loop(initial_state, obstacles):
-            loop_counter += 1
+    obstacles = add_obstacle(position, initial_obstacles)
+    if detect_loop(initial_state, obstacles):
+        loop_counter += 1
 print(f"Part 2 answer: {loop_counter}")
